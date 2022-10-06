@@ -14,16 +14,23 @@ export default function App() {
     if (!granted) {
       setOk(false);
     }
-    const location = await Location.getCurrentPositionAsync({ accuracy: 5 });
-    console.log(location);
+    const {
+      coords: { latitude, longitude },
+    } = await Location.getCurrentPositionAsync({ accuracy: 5 });
+    const location = await Location.reverseGeocodeAsync(
+      { latitude, longitude },
+      { useGoogleMaps: false }
+    );
+    setCity(location[0].region);
   };
+
   React.useEffect(() => {
     ask();
   }, []);
   return (
     <View style={styles.container}>
       <View style={styles.city}>
-        <Text style={styles.cityName}>Seoul</Text>
+        <Text style={styles.cityName}>{city}</Text>
       </View>
       <ScrollView
         horizontal
