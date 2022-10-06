@@ -10,8 +10,12 @@ export default function App() {
   const [location, setLocation] = React.useState();
   const [ok, setOk] = React.useState(true);
   const ask = async () => {
-    const permission = await Location.requestForegroundPermissionsAsync();
-    console.log(permission);
+    const { granted } = await Location.requestForegroundPermissionsAsync();
+    if (!granted) {
+      setOk(false);
+    }
+    const location = await Location.getCurrentPositionAsync({ accuracy: 5 });
+    console.log(location);
   };
   React.useEffect(() => {
     ask();
